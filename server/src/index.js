@@ -14,17 +14,35 @@ app.use(
     cookie: { secure: false }
   })
 );
-const { generateAccountToken } = require("@passwordless/server");
+const { verify, generateAccountToken } = require("@passwordless/server");
 
-app.post("/login", (req, res) => {
+app.post("/validate-login", (req, res) => {
+  if (req.body.user !== "test" || req.body.password !== "test") {
+    return res.send({ success: false, message: "Invalid password!" });
+  }
+
+  return res.send({ success: true });
+});
+
+app.post("/login", async (req, res) => {
   if (req.body.user !== "test" || req.body.password !== "test") {
     console.log("bad creds!", req.body);
     return res.send({ success: false, message: "Invalid password!" });
   }
 
-  req.session.loggedIn = true;
+  let response = await verify({
+    credential: req.body.credential,
+    serverKey: process.env.SERVER_KEY,
+    user: req.body.user
+  });
 
-  return res.send({ success: true });
+  if (response.verified) {
+    req.session.loggedIn = true;
+
+    return res.send({ success: true });
+  }
+
+  return res.send({ success: false, message: response.message });
 });
 
 app.get("/account", async (req, res) => {
