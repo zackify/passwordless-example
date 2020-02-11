@@ -9,6 +9,14 @@ export const Home = () => {
       <p>
         Logout by quitting the server and restarting it. Then refresh the page.
       </p>
+      <button
+        onClick={() => {
+          //@ts-ignore
+          Passwordless.account({ accountToken: data.token });
+        }}
+      >
+        Manage 2FA
+      </button>
     </div>
   );
 };
