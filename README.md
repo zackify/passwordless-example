@@ -7,7 +7,7 @@ I recommend viewing the code commit by commit.
 ## Setup
 
 1. Register an account on [Passwordless](http://passwordless.app)
-2. Create an app
+2. Create an app (add http://localhost:3000 as the origin)
 3. Clone this repo
 4. cd server && yarn
 5. cd web && yarn
